@@ -1,0 +1,12 @@
+# Python tijdelijke bestanden
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Grote databestanden (handig voor Brain Science)
+*.csv
+*.xlsx
+
+# Systeembestanden
+.DS_Store
+Thumbs.db
