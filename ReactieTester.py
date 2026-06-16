@@ -57,7 +57,7 @@ def results():
     canvas.itemconfig(label, text=f"Test completed! Average: {sum(reactions)/len(reactions):.0f} ms")
     print(f"\nAll times: {[f'{t:.0f}' for t in reactions]}")
     print(f"Average: {sum(reactions)/len(reactions):.0f} ms")
-    app.after(3000, make_plot)
+    app.after(1000, make_plot)
 
 def make_plot():
     # Pandas
