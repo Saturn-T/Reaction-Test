@@ -1,8 +1,10 @@
 import tkinter as tk
 import random
 import time
+import pandas as pd
+import matplotlib.pyplot as plt
 
-app = tk.Tk()
+app = tk.Tk()   
 app.title("Reaction Time Test")
 app.geometry("500x400")
 app.configure(bg="black")
@@ -45,13 +47,41 @@ def on_click(event):
     
     if loop_count >= 10:  # Limit the number of rounds
         app.unbind("<space>")
-        canvas.configure(bg="gray")
-        canvas.itemconfig(label, text=f"Test completed! Average: {sum(reactions)/len(reactions):.0f} ms")
-        print(f"\nAll times: {[f'{t:.0f}' for t in reactions]}")
-        print(f"Average: {sum(reactions)/len(reactions):.0f} ms")
+        results()
         return
-    
-    change_color()
+    else:
+        change_color()
+
+def results():
+    canvas.configure(bg="gray")
+    canvas.itemconfig(label, text=f"Test completed! Average: {sum(reactions)/len(reactions):.0f} ms")
+    print(f"\nAll times: {[f'{t:.0f}' for t in reactions]}")
+    print(f"Average: {sum(reactions)/len(reactions):.0f} ms")
+    app.after(3000, make_plot)
+
+def make_plot():
+    # Pandas
+    df = pd.DataFrame({
+        "Tries": range(1, len(reactions) + 1),
+        "Reaction Time (ms)": reactions
+    })
+    df.to_csv("reactiontimes.csv", index=False)
+    print(df)
+
+    # Matplotlib
+    plt.figure(figsize=(8, 5))
+    plt.plot(df["Tries"], df["Reaction Time (ms)"], marker="o", color="steelblue", linewidth=2)
+    plt.axhline(df["Reaction Time (ms)"].mean(), color="red", linestyle="--", label=f"Average: {df['Reaction Time (ms)'].mean():.0f} ms")
+    plt.title("Your reaction times")
+    plt.xlabel("Tries")
+    plt.ylabel("Reaction Time (ms)")
+    plt.xticks(df["Tries"])
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig("reactiontimes.png")
+    plt.show()
+
+    app.destroy()
 
 canvas.bind("<space>", on_click)
 
